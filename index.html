@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Blur 2D by Cesar Nuñez</title>
+    <script src="src/angular.min.js"></script>
+    <script src="script.js"></script>
+    <script src="src/sweetalert2@8.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        * {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        #wrapper {
+            display: flex;
+        }
+
+        main {
+            width: 80vw;
+            height: 100vh;
+            background-color: #e5e5e5;
+        }
+
+        aside {
+            width: 20vw;
+            height: 100vh;
+            background-color: #e5e5e5;
+            padding: 10px;
+        }
+
+        main,
+        aside {
+            position: relative;
+            box-shadow: inset 0 0 0 1px black;
+        }
+
+        .cuadro {
+            width: 10%;
+            height: 10%;
+            float: left;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            box-shadow: inset 0 0 0 1px black;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .odd {
+            background-color: #0032b35e;
+            color: #ffffff;
+        }
+
+        .even {
+            background-color: #009688;
+            color: #000000;
+        }
+
+        /* .odd {
+            background-color: #666666;
+            color: #666666;
+        }
+
+        .even {
+            background-color: #666666;
+            color: #666666;
+        } */
+
+        .cuadro.odd:not(#cuadro_1):not(#cuadro_100):after {
+            content: attr(data-number);
+            text-align: center;
+            height: 0px;
+            width: 50%;
+            border: 1px dashed #000000a8;
+            color: #000000a8;
+            display: inline-table;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        .cuadro.even:not(#cuadro_1):not(#cuadro_100):after {
+            content: attr(data-number);
+            text-align: center;
+            height: 0px;
+            width: 50%;
+            border: 1px dashed #000000a8;
+            color: #000000a8;
+            display: inline-table;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        .cuadro.Atajo:not(#cuadro_1):not(#cuadro_100):after {
+            color: green !important;
+            border-color: green !important;
+        }
+
+        .cuadro.Hueco:not(#cuadro_1):not(#cuadro_100):after {
+            color: red !important;
+            border-color: red !important;
+        }
+
+        .cuadro.Banana:not(#cuadro_1):not(#cuadro_100):after {
+            color: purple !important;
+            border-color: purple !important;
+        }
+
+        .cuadro#cuadro_10:after,
+        .cuadro#cuadro_30:after,
+        .cuadro#cuadro_50:after,
+        .cuadro#cuadro_70:after,
+        .cuadro#cuadro_90:after {
+            transform: rotate(-30deg) translate(-17%, -160%);
+        }
+
+        .cuadro#cuadro_11:after,
+        .cuadro#cuadro_31:after,
+        .cuadro#cuadro_51:after,
+        .cuadro#cuadro_71:after,
+        .cuadro#cuadro_91:after {
+            transform: rotate(30deg) translate(-17%, 160%);
+        }
+
+        .cuadro#cuadro_20:after,
+        .cuadro#cuadro_40:after,
+        .cuadro#cuadro_60:after,
+        .cuadro#cuadro_80:after {
+            transform: rotate(30deg) translate(17%, -160%);
+        }
+
+        .cuadro#cuadro_21:after,
+        .cuadro#cuadro_41:after,
+        .cuadro#cuadro_61:after,
+        .cuadro#cuadro_81:after {
+            transform: rotate(-30deg) translate(17%, 160%);
+        }
+
+
+        #ficha_1 {
+            /* background-color: #009688a1;
+            border: 2px solid #009688; */
+            background-image: url(car_1.gif);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+            left: 0vw;
+            top: 90vh;
+        }
+
+        #ficha_2 {
+            /* background-color: #960000ab;
+            border: 2px solid #960000c9; */
+            background-image: url(car_2.gif);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+            left: 0vw;
+            top: 94.0vh;
+        }
+
+        #ficha_1.activa {
+            background-image: url(car_3.gif);
+        }
+
+        #ficha_2.activa {
+            background-image: url(car_4.gif);
+        }
+
+        .fichas {
+            height: 3vw;
+            width: 8vw;
+            /* border-radius: 50%; */
+            position: absolute;
+            z-index: 100;
+            /* transform: translate(calc(2.5vw), calc(98vh - 3vw)); */
+            transition-property: left, top;
+            transition-duration: 500ms, 500ms;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .fichas:hover,
+        .fichas.activa {
+            /* border-bottom: 2px solid black !important; */
+            box-shadow: inset 0 0 8px 0px black;
+        }
+
+        #cuadro_1,
+        #cuadro_100 {
+            background-image: url(bandera.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: transparent;
+        }
+
+        aside>h1 {
+            text-align: center;
+        }
+
+        audio {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            right: 0;
+            background-color: #f1f3f4;
+            border: 5px solid #08090c;
+        }
+
+        .fichas>img {
+            width: 20%;
+        }
+
+        button#btn_tirar {
+            color: white;
+            background-color: #000000;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .dado {
+            width: 100%;
+            text-align: center;
+        }
+
+        .dado>img {
+            width: 50%;
+        }
+
+        button#btn_reiniciar {
+            background-color: #fd6145;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        div#console {
+            width: 100%;
+            height: calc(100vh - 430px);
+            background-color: #f1f3f4;
+            margin-bottom: 20px;
+            border: 3px solid;
+        }
+
+        #ficha_1::before {
+            content: "";
+            height: 100%;
+            width: 5px;
+            top: 0;
+            background-color: #d30505;
+            left: 0;
+            position: absolute;
+        }
+
+        #ficha_2::before {
+            content: "";
+            height: 100%;
+            width: 5px;
+            top: 0;
+            background-color: #ffce00;
+            left: 0;
+            position: absolute;
+        }
+
+        #ficha_1:hover:after {
+            content: attr(data-conductor);
+            text-align: left;
+            height: 0px;
+            width: auto;
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #000000a8;
+            font-size: 9px;
+            font-weight: bold;
+            transform: translate(0px, 20px) rotate(90deg);
+        }
+
+        #ficha_2:hover::after {
+            content: attr(data-conductor);
+            text-align: left;
+            height: 0px;
+            width: auto;
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #000000a8;
+            font-size: 9px;
+            font-weight: bold;
+            transform: translate(0px, 20px) rotate(90deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper" ng-app="myGame" ng-controller="myCtrl">
+        <div ng-click="seleccionar_ficha('ficha_1')" data-conductor="{{jugador_1.car_conductor}}"
+            ng-class="{'activa':ficha_seleccionada=='ficha_1'}" id="ficha_1" class="fichas">
+            <img ng-repeat="potenciador in jugador_1.car_potenciadores"
+                ng-click="ejecutar('ficha_1',jugador_1,potenciador)" ng-src="power-ups/{{potenciador}}.png">
+        </div>
+        <div ng-click="seleccionar_ficha('ficha_2')" data-conductor="{{jugador_2.car_conductor}}"
+            ng-class="{'activa':ficha_seleccionada=='ficha_2'}" id="ficha_2" class="fichas">
+            <img ng-repeat="potenciador in jugador_2.car_potenciadores"
+                ng-click="ejecutar('ficha_2',jugador_2,potenciador)" ng-src="power-ups/{{potenciador}}.png">
+        </div>
+        <main>
+            <div ng-repeat="cuadro in tablero" data-number="{{(cuadro.evento!='')?cuadro.evento:cuadro.id}}"
+                ng-click="mover_ficha(cuadro.id)" id="{{'cuadro_'+cuadro.id}}"
+                class="cuadro {{cuadro.clase+' '+cuadro.evento}}">
+                <!-- <b></b> -->
+            </div>
+        </main>
+        <aside>
+            <h1>Blur 2D</h1>
+            <hr>
+            <!-- <button id="btn_tirar" ng-click="valor_dado=dados(1,6)">Tirar el dado</button> -->
+            <p class="dado">
+                <img ng-src="dado/{{valor_dado}}.png">
+            </p>
+            <hr>
+            <div id="console">
+
+            </div>
+            <button id="btn_reiniciar" ng-click="">Reiniciar Juego</button>
+            <audio id="sound" controls autoplay loop>
+                <source src="blur-soundtrack.mp3">
+            </audio>
+        </aside>
+    </div>
+</body>
+
+</html>
